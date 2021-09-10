@@ -1,42 +1,34 @@
-#include<iostream> 
-#include<unistd.h>
-#include<string>
-#include<stdlib.h>
-
+#include <iostream>
+#include <sys/wait.h>
+#include <unistd.h>
 using namespace std;
+  
+// Driver code
+int main(int argc, char *argv[]){
 
+	// if no arguments were passed
+	if(argc == 1){
+		cerr << "Usage: ./thrice PROG [ARGS]..." << endl;
+		exit(EXIT_FAILURE);
+	}
 
-
-int main(int argc, char * argv[]){
-
-
-int rc = fork();
-
-if(rc < 0){
-	cout << "fork failed\n";
-	exit(1);
-}
-
-
-else if(rc == 0){
-	char * foo;
-	foo = new char[3];
-	foo[0] = *strdup(argv[1]);
-	foo[1] = *strdup("thrice.cpp");
-	foo[2] = NULL;
-
-	for(int i=0; i<2;i++){
-
-		execvp(foo[0],foo);
-
+	int pid, pid1, pid2;
+	pid = fork();
+	if (pid == 0) {
+		// child 1 gets printed first
+		cout << argv[1] << endl;
+	}
+	else {
+		wait(NULL);
+		pid1 = fork();
+		if (pid1 == 0) {
+			// child 2 gets printed second
+			cout << argv[1] << endl;
+		}
+		else {
+			// parent gets printed last
+			wait(NULL);
+			cout << argv[1] << endl;
 		}
 	}
-
-else {
-	cout << "Main process";
-
-	}
-
-return 0;
-
 }
