@@ -14,11 +14,11 @@ int main(int argc, char *argv[]){
 
 	int pid, pid1, pid2;
 	pid = fork();
-	if (pid == 0) {
+	if(pid == 0){
 		// child 1 gets printed first
 		cout << argv[1] << endl;
 	}
-	else {
+	else{
 		wait(NULL);
 		pid1 = fork();
 		if (pid1 == 0) {
@@ -26,9 +26,12 @@ int main(int argc, char *argv[]){
 			cout << argv[1] << endl;
 		}
 		else {
-			// parent gets printed last
 			wait(NULL);
-			cout << argv[1] << endl;
+			pid2 = fork();
+			if (pid2 == 0) {
+				// child 3 gets printed third
+				cout << argv[1] << endl;
+			}
 		}
 	}
 }
