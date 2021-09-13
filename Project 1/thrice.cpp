@@ -12,26 +12,22 @@ int main(int argc, char *argv[]){
 		exit(EXIT_FAILURE);
 	}
 
-	int pid, pid1, pid2;
-	pid = fork();
-	if(pid == 0){
-		// child 1 gets printed first
-		cout << argv[1] << endl;
-	}
-	else{
-		wait(NULL);
-		pid1 = fork();
-		if (pid1 == 0) {
-			// child 2 gets printed second
+	for(int i = 0; i < 3; i++){
+		// fork a child process
+      	int pid = fork();
+
+		// if process is child
+		if(pid == 0){
+			if(argv[1] == "echo"){
+			cout << argv[2] << endl;
+			}else{
 			cout << argv[1] << endl;
-		}
-		else {
-			wait(NULL);
-			pid2 = fork();
-			if (pid2 == 0) {
-				// child 3 gets printed third
-				cout << argv[1] << endl;
 			}
+			// to exit the child process
+			return NULL;
+		}else{
+			// wait for the child process to finish
+			wait(&pid);
 		}
-	}
+    }
 }
