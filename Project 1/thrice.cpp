@@ -10,8 +10,7 @@
 #include<cstdio>
 #include<fcntl.h>
 
-using namespace std;
-
+using std::vector;
 
 int main(int argc, char * argv[]){
 	// if no arguments were passed
