@@ -10,6 +10,7 @@ int main(int argc, char *argv[]) {
         // todo
       }
     case 'n':{
+      // todo, might be incorect 
       for(int j=3; j<argc; j++){
         for(int i=0; i<stoi(optarg); i++){
               int pid = fork();
