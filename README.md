@@ -14,21 +14,21 @@ Resource management, memory organization, input/output, control process synchron
 7. Design software exhibiting design best practices, such as clarity, structured programming, separation of concerns, and/or design principles and patterns.
 
 ## Course Outline:
-Introduction
-Processes
-CPU virtualization
-Scheduling
-Memory
-Address translation and segmentation
-Free-space management and paging
-Paging performance
-Virtual memory
-Files and I/O devices
-Filesystems
-Threads
-Locks
-Fall recess
-Condition variables
+Introduction,
+Processes,
+CPU virtualization,
+Scheduling,
+Memory,
+Address translation and segmentation,
+Free-space management and paging,
+Paging performance,
+Virtual memory,
+Files and I/O devices,
+Filesystems,
+Threads,
+Locks,
+Fall recess,
+Condition variables,
 Semaphores
 
 ## Course Prerequisites:
