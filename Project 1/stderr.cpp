@@ -8,32 +8,30 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-  
-  // executing command
+
+  // loading command onto a vector
   vector<char *> args;
-  if (strcmp(argv[2], "echo") == 0) {
-    args.push_back(strdup(argv[1]));
-    for (int i = 2; i < argc; i++) {
-      args.push_back(strdup(argv[i]));
+  if(argc == 3){
+      args.push_back(strdup(argv[2]));
+      args.push_back(NULL);
+    }else{
+      for (int i = 3; i < argc; i++) {
+        args.push_back(strdup(argv[i]));
+      }
     }
-  } else {
-    args.push_back(strdup(argv[2]));
-    args.push_back(NULL);
-  }
 
   pid_t pid = fork();
   if (pid < 0) {
     exit(EXIT_FAILURE);
   }else if(pid == 0) {
+    //close(STDOUT_FILENO);
     close(STDERR_FILENO);
     open(argv[1], O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
 
     execvp(args[0], args.data());
-  }else{ 
+  }else{
     int wc = wait(NULL);
   }
-
-  return EXIT_SUCCESS;
-
   
+  return EXIT_SUCCESS;
 }
