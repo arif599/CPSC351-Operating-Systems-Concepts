@@ -14,6 +14,8 @@ using std::vector;
 
 int main(int argc, char *argv[]) {
 
+  pid_t pid;
+  pid_t c;
   // arguments to execute
   if (argc == 1) {
     cerr << "Usage: ./thrice PROG [ARGS]..." << endl;
@@ -22,6 +24,8 @@ int main(int argc, char *argv[]) {
 
   // arguments to execute
   vector<char *> args;
+
+  // Check if echo command
   if (strcmp(argv[1], "echo") == 0) {
     args.push_back(strdup(argv[1]));
     for (int i = 2; i < argc; i++) {
@@ -32,26 +36,26 @@ int main(int argc, char *argv[]) {
     args.push_back(NULL);
   }
 
-  // Create 3 new child processes
-  pid_t pid = fork();
-  pid_t pid_2 = fork();
+  for (int i = 0; i <= 2; i++) {
+    // loop for our child process to execute
 
-  if (pid < 0) {
-    // cout << "fork failed\n";
-    exit(EXIT_FAILURE);
+    pid = fork();
 
-  } else if (pid == 0) {
+    if (pid == 0) { // child process
 
-    execvp(args[0], args.data());
+      execvp(args[0], args.data());
 
-  } else if (pid_2 == 0) {
+    } else {
 
-    execvp(args[0], args.data());
+      if (pid < 0) {
+        cerr << "fork failed\n";
+        return EXIT_FAILURE;
 
-  } else { // Parent waits for child process to finish
+      } else { // Parent process waiting for child to finish
 
-    int wc = wait(NULL);
+        c = wait(NULL);
+      }
+    }
   }
-
   return EXIT_SUCCESS;
 }
