@@ -26,10 +26,9 @@ if (argc == 1) {
   }
  
 
-  // Check if echo command
-  if (strcmp(argv[1], "echo") == 0) {
-
-    args.push_back(strdup("echo"));  //Store command to exec 
+  // if a command has multiple arguments
+  if(argc > 2){
+    args.push_back(strdup(argv[1]));  //Store command to exec 
 
     for (int i = 2; i < argc; i++) { //Loop for amount of arguments given
 
@@ -37,7 +36,7 @@ if (argc == 1) {
       args.push_back(strdup(argv[i])); 
     }
 
-  } else {
+  }else { // if command has no argument
 
     args.push_back(strdup(argv[1])); //Store first command to run 
     args.push_back(NULL);
