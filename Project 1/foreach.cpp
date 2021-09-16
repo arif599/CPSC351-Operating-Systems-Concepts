@@ -15,8 +15,28 @@ int main(int argc, char *argv[]) {
 
    switch(getopt(argc, argv, "pn:")){
       case 'p':{
-        // todo
+        //arguments to execute 
+        vector<char *> args;
+        //cout << "Program: " << argv[argc-1] << endl;
+        args.push_back(strdup(argv[argc-1]));
+        for(int i=2; i<argc-1; i++){
+          //cout << "arguments: " << argv[i] << endl;
+          args.push_back(strdup(argv[i]));
+
+          auto pid = fork();
+          if(pid < 0){
+              //cout << "fork failed\n";
+              exit(EXIT_FAILURE);
+          }else if(pid == 0){
+            //cout << "Child program: " << args[0] << endl;
+            execvp(args[0], args.data()); 
+        }else{ //Parent does not wait for child process to finish
+            args.pop_back();
+          }
+        }
       }
+      break;
+    }
     case 'n':{
       // todo
     }
