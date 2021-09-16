@@ -6,13 +6,13 @@ clean:
 	rm -f thrice stderr foreach
 
 thrice: thrice.cpp
-	gcc -o thrice thrice.cpp 
+	g++ -o thrice thrice.cpp 
 
 stderr: stderr.cpp
-	gcc -o stderr stderr.cpp 
+	g++ -o stderr stderr.cpp 
 
 foreach: foreach.cpp
-	gcc -o foreach foreach.cpp 
+	g++ -o foreach foreach.cpp 
 
 
 
