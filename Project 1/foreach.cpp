@@ -38,7 +38,28 @@ int main(int argc, char *argv[]) {
       break;
     }
     case 'n':{
-      // todo
+      //arguments to execute 
+        vector<char *> args;
+        //cout << "Program: " << argv[argc-1] << endl;
+        args.push_back(strdup(argv[argc-1]));
+        for(int i=3; i<argc-1; i++){
+          for(int j=0; j<stoi(optarg); j++){
+            //cout << "arguments: " << argv[i] << endl;
+            args.push_back(strdup(argv[i]));
+
+            auto pid = fork();
+            if(pid < 0){
+                //cout << "fork failed\n";
+                exit(EXIT_FAILURE);
+            }else if(pid == 0){
+              //cout << "Child program: " << args[0] << endl;
+              execvp(args[0], args.data()); 
+          }else{ //Parent does not wait for child process to finish
+              int wc = wait(NULL);
+              args.pop_back();
+            }
+          }
+        }
     }
     default :
       if(argc == 1){
