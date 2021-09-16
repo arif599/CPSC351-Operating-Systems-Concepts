@@ -102,7 +102,6 @@ pid_t wc;     //Used for waiting on child process
             }
         }
       }
-      break;
     }
    
 
