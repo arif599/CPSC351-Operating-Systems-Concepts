@@ -1,15 +1,15 @@
-#include<iostream>
-#include<unistd.h>
-#include<string>
-#include<stdlib.h>
-#include<sys/wait.h>
-#include<vector>
-#include <cstring>
 #include <cassert>
-#include<cstdlib>
-#include<cstdio>
-#include<fcntl.h>
-
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fcntl.h>
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <vector>
+using namespace std;
 using std::vector;
 
 int main(int argc, char * argv[]){
