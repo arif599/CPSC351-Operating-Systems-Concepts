@@ -8,6 +8,19 @@
 using std::cerr;
 using std::endl;
 
+//Placed in memory right before allocation happens
+struct header_block{
+    int size;
+    int magic; 
+};
+
+//Free list implementation 
+struct free_list{
+    int size;
+    free_list *next; 
+};
+
+
 Allocator::Allocator(size_t size)
 {
     heap = new std::byte[size]();
