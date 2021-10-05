@@ -12,6 +12,12 @@ Allocator::Allocator(size_t size)
 {
     heap = new std::byte[size]();
     assert(heap != NULL);
+    
+    //Acquire some free space based on size passed 
+    free_list *head = mmap(NULL, size, PROT_READ|PROT_WRITE,
+    MAP_ANON|MAP_PRIVATE, -1, 0);   
+    head->size = size - sizeof(free_list);
+    head->next = NULL; 
 
     this->heap_size = size;
 }
