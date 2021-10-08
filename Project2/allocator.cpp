@@ -8,17 +8,94 @@
 using std::cerr;
 using std::endl;
 
+//MEMORY_BLOCK used to calculate how big of block to add
+//HEADER_BLOCK used to calculate where a block resides in memory
+//Cast to void* since we only want to know memory location 
+#define MEMORY_BLOCK(ptr) (node_ptr*)((unsigned long)ptr + sizeof(free_list))
+#define HEADER_BLOCK(ptr) (node_ptr*)unsigned long)ptr - sizeof(free_list))
+
 //Placed in memory right before allocation happens
 struct header_block{
     int size;
     int magic; 
 };
 
+struct node_ptr {
+    node_ptr * next, *prev;
+    size_t size; 
+}
 //Free list implementation 
-struct free_list{
-    int size;
-    free_list *next; 
+class free_list{
+    
+    public:  
+    node_ptr *head, *tail; 
+
+    public:  
+
+    void init(node_ptr * ptr,size_t size){
+
+        ptr->size = size-sizeof(node_ptr);
+        head = ptr; 
+        tail = ptr;
+        head->next = nullptr;
+        head->prev = nullptr; 
+        tail->next = nullptr; 
+        tail->prev = nullptr; 
+    }
+
+
+    void add_to_list(node_ptr * block){
+
+    assert(head != nullptr);
+    block->next = nullptr;
+    block->prev = nullptr; 
+    node_ptr * node; 
+
+    if((unsigned long)block < (unsigned long)head){
+        head->prev = block; 
+        block->next = head; 
+        head = block; 
+    }
+    else{
+        node = head; 
+        while (node->next && ((unsigned long)curr->next < (unsigned long)block)){
+            node = node->next; 
+        }
+        block->next = node->next;
+        node->next = block; 
+    }
+
+   
+        
+}
+
+void remove_from_list(free_list * block){
+
+    
+    if(head->next == nullptr){
+
+        
+    }
+}
+
+node_ptr * split_block(node_ptr * block, size_t size){
+
+    node_ptr * memory_block = MEMORY_BLOCK(block);
+    node_ptr * temp = (node_ptr *) ((unsigned long)memory_block + size); 
+    temp->size = block->size - (size + sizeof(node_ptr)); 
+    return temp; 
+
+}
+
+void coalesce(){
+
+}
+
+
+
 };
+
+free_list list; 
 
 
 Allocator::Allocator(size_t size)
@@ -26,12 +103,14 @@ Allocator::Allocator(size_t size)
     heap = new std::byte[size]();
     assert(heap != NULL);
 
-    this->heap_size = size;
     
-    //Initialize free list 
-    free_list *head = heap;
-    head->size = size - sizeof(free_list);
-    head->next = NULL;
+    
+    this->heap_size = size;
+
+    node_ptr *ptr = reinterpret_cast<node_ptr *>(heap);
+    list.init(ptr, size);  
+    
+
 }
 
 Allocator::~Allocator()
@@ -42,13 +121,42 @@ Allocator::~Allocator()
 std::byte *Allocator::malloc(size_t size)
 {
     assert(size > 0 && size <= heap_size);
+    assert(list.head != nullptr);
+    node_ptr * temp; 
+    temp = list.head; 
 
-    return &(heap[0]);
+    if(temp->next == nullptr){
+
+        if(temp->size == (size + sizeof(node_ptr))){
+            return temp.head; 
+        }
+        else if(temp->size > (size+sizeof(node_ptr))){
+            node * ptr = list.split_block(temp,size);
+            list.add_to_list(ptr); 
+            return reinterpret_cast<std::byte *>(ptr); 
+        }
+        else {
+            return nullptr; 
+        }
+    }
+    else{ 
+        if(temp->size == (size+sizeof(node_ptr))){
+            list.remove_from_list(list.head);
+            return 
+        }
+        
+    }
+    
+
+
+    //return &(heap[0]);
+    return list.head;
 }
 
 void Allocator::free(std::byte *ptr)
 {
     assert(ptr != NULL);
+
 }
 
 void Allocator::dump()
