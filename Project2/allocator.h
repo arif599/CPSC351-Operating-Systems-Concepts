@@ -26,6 +26,7 @@ class FreeList{
         void printList();
         void afterFree();
         void addFree(std::byte *freedAddress, size_t size);
+        ~FreeList();
 };
 
 

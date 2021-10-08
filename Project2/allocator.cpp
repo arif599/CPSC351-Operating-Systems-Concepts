@@ -20,6 +20,7 @@ Allocator::Allocator(size_t size)
 Allocator::~Allocator()
 {
     delete[] heap;
+    list.~FreeList();
 }
 
 std::byte *Allocator::malloc(size_t size)
@@ -135,7 +136,9 @@ void FreeList::afterFree(){
           // merge blocks
           currNode->len += currNode->next->len;
           if(currNode->next->next != NULL){
+            Node *tempNode = currNode->next;
             currNode->next = currNode->next->next;
+            delete tempNode;
           }else{
             currNode->next = NULL;
           }
@@ -146,11 +149,6 @@ void FreeList::afterFree(){
 }
 
 void FreeList::addFree(std::byte *freedAddress, size_t size){
-      // for (unsigned int i = 0; i < size; i++)
-      // {
-      //     delete freedAddress[i];
-      // }
-
     Node *currNode = head;
 
     if (freedAddress < head->address)
@@ -168,7 +166,7 @@ void FreeList::addFree(std::byte *freedAddress, size_t size){
         {
             if (currNode->next == NULL)
             {
-                // adding new node to the end of the linked list
+                // adding new node to  the linked list
                 Node* newNode = new Node();
                 newNode->address = freedAddress;
                 newNode->len = size;
@@ -184,7 +182,7 @@ void FreeList::addFree(std::byte *freedAddress, size_t size){
                 newNode->len = size;
                 newNode->next = currNode->next;
                 currNode->next = newNode;
-
+                
                 // break after inserting element
                 break;
             }
@@ -196,8 +194,21 @@ void FreeList::addFree(std::byte *freedAddress, size_t size){
   // after inserting a free block, merge any blocks that are next to each other
   cout << "\nBEFORE MERGE" << endl;
   printList();
-  afterFree();
+
+  afterFree(); // this is where the merge happens
+  
   cout << "\nAFTER MERGE" << endl;
   printList();
 
+}
+
+FreeList::~FreeList(){
+  Node* currNode = head;
+  Node* next;
+
+  while (currNode != NULL) {
+      next = currNode->next;
+      delete currNode;
+      currNode = next;
+  }
 }
