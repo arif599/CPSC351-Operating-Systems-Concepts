@@ -7,12 +7,12 @@ using namespace std;
 
 const auto KB = 1024;
 
-//Node for Free list 
+//Node for Free list
 class Node{
     public:
         std::byte *address;
         size_t len;
-        Node *next; 
+        Node *next;
 };
 
 // Free list implementation
