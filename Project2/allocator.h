@@ -31,7 +31,6 @@ class Node{
 class FreeList{
     public:
         Node* head;
-        Node* tail;
 
     public:
         void initialize(std::byte *allocatedHeap, size_t size){
@@ -42,9 +41,7 @@ class FreeList{
             newNode->next = NULL;
             newNode->prev = NULL;
             head = newNode;
-            tail = head;
             
-
             cout << "\tINITIALIZING FREE LIST:" << endl;
             cout << "\t\tAddress - " << newNode->address << endl;
             cout << "\t\tLength - " << newNode->len << " KB" << endl;
@@ -183,4 +180,3 @@ public:
 };
 
 #endif
-
