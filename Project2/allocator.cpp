@@ -14,11 +14,6 @@ using std::endl;
 #define MEMORY_BLOCK(ptr) (node_ptr*)((unsigned long)ptr + sizeof(free_list))
 #define HEADER_BLOCK(ptr) (node_ptr*)unsigned long)ptr - sizeof(free_list))
 
-//Placed in memory right before allocation happens
-struct header_block{
-    int size;
-    int magic; 
-};
 
 struct node_ptr {
     node_ptr * next, *prev;
@@ -46,36 +41,54 @@ class free_list{
 
     void add_to_list(node_ptr * block){
 
-    assert(head != nullptr);
     block->next = nullptr;
     block->prev = nullptr; 
-    node_ptr * node; 
+    
 
-    if((unsigned long)block < (unsigned long)head){
-        head->prev = block; 
-        block->next = head; 
+
+    if(head == nullptr){
         head = block; 
+        head->next = nullptr; 
     }
     else{
-        node = head; 
-        while (node->next && ((unsigned long)curr->next < (unsigned long)block)){
-            node = node->next; 
+        if((unsigned long)head > (unsigned long)block){
+            head->prev = block; 
+            block->next = head;
+            head = block; 
         }
-        block->next = node->next;
-        node->next = block; 
-    }
+        else{
+            node_ptr * ptr = head; 
+            while(ptr->next && (unsigned long)ptr->next < (unsigned long)block){
+                ptr = ptr->next; 
+            }
+            ptr->next->prev = block;
+            block->next = ptr->next; 
+            ptr->next = block; 
+            
 
+        }
+    }
    
         
 }
 
-void remove_from_list(free_list * block){
+void remove_from_list(node_ptr * block){
 
-    
-    if(head->next == nullptr){
-
-        
+    if(block->prev == nullptr){
+        if(block->next){
+            head = block->next; 
+        }
+        else{
+            head = nullptr; 
+        }
     }
+    else{
+        block->prev->next = block->next;
+    }
+    if(block->next){
+        block->next->prev = block->prev; 
+    }
+
 }
 
 node_ptr * split_block(node_ptr * block, size_t size){
@@ -88,6 +101,23 @@ node_ptr * split_block(node_ptr * block, size_t size){
 }
 
 void coalesce(){
+
+node_ptr * ptr = head;
+
+while(ptr->next) {
+    unsigned long current = (unsigned long)ptr; 
+    unsigned long next = (unsigned long)ptr->next; 
+    if((current + ptr->size + sizeof(node_ptr)) == next){
+        ptr->size += ptr->next->size + sizeof(node_ptr);
+        ptr->next = ptr->next->next; 
+        if(ptr->next){
+            ptr->next->prev = ptr; 
+        }
+        else{
+           break;  
+    }
+}
+
 
 }
 
@@ -122,40 +152,35 @@ std::byte *Allocator::malloc(size_t size)
 {
     assert(size > 0 && size <= heap_size);
     assert(list.head != nullptr);
-    node_ptr * temp; 
+    node_ptr * temp, *ptr, *ptr_1; 
     temp = list.head; 
 
-    if(temp->next == nullptr){
+    while(temp){
+        if(temp->size >= size + sizeof(node_ptr)){
+            ptr = MEMORY_BLOCK(temp);
+            list.remove_from_list(temp);
+            if(ptr->size == size) {
+                return reinterpret_cast<byte *>(ptr); 
+            }
 
-        if(temp->size == (size + sizeof(node_ptr))){
-            return temp.head; 
-        }
-        else if(temp->size > (size+sizeof(node_ptr))){
-            node * ptr = list.split_block(temp,size);
-            list.add_to_list(ptr); 
-            return reinterpret_cast<std::byte *>(ptr); 
+            ptr_1 = split(temp,size);
+            list.add_to_list(ptr_1);
+            return reinterpret_cast<std::byte *>(ptr);
+
         }
         else {
-            return nullptr; 
+            temp = temp->next; 
         }
     }
-    else{ 
-        if(temp->size == (size+sizeof(node_ptr))){
-            list.remove_from_list(list.head);
-            return 
-        }
-        
-    }
-    
 
-
-    //return &(heap[0]);
-    return list.head;
+    return nullptr; 
 }
 
 void Allocator::free(std::byte *ptr)
 {
     assert(ptr != NULL);
+    list.add_to_list(HEADER_BLOCK(ptr));
+    list.coalesce();
 
 }
 
