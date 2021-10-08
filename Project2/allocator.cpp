@@ -83,7 +83,6 @@ void FreeList::initialize(std::byte *allocatedHeap, size_t size){
     newNode->address = allocatedHeap;
     newNode->len = size;
     newNode->next = NULL;
-    newNode->prev = NULL;
     head = newNode;
     
     cout << "\tINITIALIZING FREE LIST:" << endl;
