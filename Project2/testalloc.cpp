@@ -84,7 +84,7 @@ int main()
 
     a->dump();
 
-    delete a; // problem here
+    delete a;
 
-    // return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
