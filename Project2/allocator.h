@@ -31,6 +31,7 @@ class Node{
 class FreeList{
     public:
         Node* head;
+        
 
     public:
         void initialize(std::byte *allocatedHeap, size_t size){
