@@ -20,7 +20,6 @@ Allocator::Allocator(size_t size)
 Allocator::~Allocator()
 {
     delete[] heap;
-    //list.~FreeList();
 }
 
 std::byte *Allocator::malloc(size_t size)
@@ -101,7 +100,7 @@ void FreeList::initialize(std::byte *allocatedHeap, size_t size){
 
 
 std::byte* FreeList::firstFit(size_t size){
-    // iterate thru the list and finds the first free segment
+    // iterates through the list and finds the first free segment
     // then returns a piece of the free segment based on the size requested
     Node* currNode = head;
     while(currNode != NULL){
@@ -217,5 +216,4 @@ FreeList::~FreeList(){
       delete currNode;
       currNode = next;
   }
-  //delete next;
 }
