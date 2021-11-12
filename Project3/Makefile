@@ -1,18 +1,16 @@
 CXXFLAGS = -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
-all: thrice stderr foreach
+all: box rebuild
 
 clean:
-  rm -f thrice stderr foreach
+	rm -f box rebuild 
 
-thrice: thrice.cpp
-	g++ -o thrice thrice.cpp 
+box: box.cpp
+	$(CXXFLAGS) g++ -o box box.cpp 
 
-stderr: stderr.cpp
-	g++ -o stderr stderr.cpp 
+rebuild: rebuild.cpp
+	$(CXXFLAGS) g++ -o rebuild rebuild.cpp 
 
-foreach: foreach.cpp
-	g++ -o foreach foreach.cpp 
 
 
 
