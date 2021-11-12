@@ -26,11 +26,15 @@ int main(int argc, char *argv[])
 
     rc = fork();
 
+    //In the child, execute first argument when file changes
     if (rc == 0)
     {
+        //Retrieve command to execute
         vector<char *> args;
         args.push_back(strdup(argv[1]));
         args.push_back(NULL);
+
+        //Get list of files to watch
         for (int i = 2; i < argc; i++)
         {
             // wild card
@@ -45,6 +49,10 @@ int main(int argc, char *argv[])
                 files.push_back(strdup(argv[i]));
             }
         }
+
+        //Add given files to watch
+        //Keep track of all the files in hash map
+        //Key will be watch descriptor and value being file name
         for (int i = 0; i < files.size(); i++)
         {
             int wd = inotify_add_watch(inotify_fd, files[i], IN_MODIFY);
@@ -58,7 +66,6 @@ int main(int argc, char *argv[])
         }
         cout << "..." << endl;
 
-        // int i = 0;
         while (1)
         {
             int n = read(inotify_fd, buf, BUF_LEN);
@@ -69,17 +76,20 @@ int main(int argc, char *argv[])
                 event = (struct inotify_event *)p;
                 uint32_t mask = event->mask;
 
+                //Check if file is modified
                 if (mask & IN_MODIFY)
-                {
-
-                    // string str(event->name);
+                {   
+                    //Display which file has changed using hash map
                     cout << eventFiles[event->wd] << " has changed...\n";
 
-                    execvp(args[0], args.data());
+                    execvp(args[0], args.data()); //execute argument
                 }
             }
         }
     }
+
+    //Parent process will be the same as child
+    //Parent will only watch for changes without executing commands
     else
     {
         int rc_wait = wait(NULL);
