@@ -10,7 +10,7 @@ Lea Albano (leaalbano@csu.fullerton.edu)
 ---
 
 # box.cpp
-**Summary:**
+**Summary:** When the create command is called, we extract all the file names and store them in a struct. This Metadata struct contains all the information about the files such as the name, mode, start offset, end offset, and the fd. Once this information is calculated, the metadata gets stored in the box file. After the Metadata limit offset, the contents of the files get stored. When the list command is called, the Metadata within the box file is read and the names of the files are extracted and printed out. When the unpack command is called, the contents of the files given as arguments are extracted from the box file and a new file is created with the original mode and name. 
 
 
 
